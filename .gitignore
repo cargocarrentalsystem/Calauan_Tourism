@@ -22,3 +22,5 @@ Thumbs.db
 desktop.ini
 .DS_Store
 "@ | Out-File -Encoding utf8 .gitignore
+
+blueprint/static/uploads/
