@@ -1,0 +1,130 @@
+:root{
+  --p:#7c3aed;      /* purple */
+  --pm:#6d28d9;
+  --pd:#4c1d95;
+  --pl:#f5f3ff;     /* light purple */
+  --bd:#ddd6fe;     /* border */
+  --t:#2e1065;      /* text */
+  --mut:#6b6290;
+  --red:#dc2626;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;
+  font-family:"Segoe UI",system-ui,sans-serif;color:var(--t);
+  background:var(--pd) url('calauan_tour.jpg') center/cover fixed no-repeat;
+}
+body::before{content:"";position:fixed;inset:0;background:rgba(76,29,149,.78)}
+a{color:var(--pm)}
+.ic{width:20px;height:20px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ================= LOGIN CARD ================= */
+.auth{position:relative;min-height:100vh;display:grid;place-items:center;padding:24px 16px}
+.card{
+  position:relative;overflow:hidden;width:100%;max-width:420px;display:grid;gap:14px;
+  padding:34px 28px 26px;background:#fff;border-radius:20px;
+  box-shadow:0 25px 60px rgba(46,16,101,.45);
+  animation:rise .6s cubic-bezier(.2,.8,.2,1) both;
+}
+.card::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--p)}
+.card h1{margin:0;font-size:1.5rem;text-align:center}
+.card form{display:grid;gap:14px}
+
+.logo{
+  width:60px;height:60px;border-radius:18px;margin:0 auto;display:grid;place-items:center;
+  color:#fff;background:var(--p);box-shadow:0 10px 24px rgba(124,58,237,.4);
+}
+.logo .ic{width:28px;height:28px}
+.logo.sm{width:52px;height:52px;border-radius:16px}
+.logo.sm .ic{width:26px;height:26px}
+
+.hint{margin:0;text-align:center;font-size:.92rem;line-height:1.5;color:var(--mut)}
+.alt{margin:0;text-align:center;font-size:.9rem;color:var(--mut)}
+.link{
+  padding:0;border:0;background:none;font:inherit;font-weight:600;color:var(--pm);cursor:pointer;
+}
+.link:hover{text-decoration:underline}
+.back{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  font-size:.88rem;font-weight:500;color:var(--mut);text-decoration:none;
+}
+.back .ic{width:16px;height:16px}
+.back:hover{color:var(--pm)}
+
+/* ================= FORM ================= */
+.fg{display:grid;gap:6px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+label{font-size:.85rem;font-weight:600;color:var(--mut)}
+input,select{
+  width:100%;padding:12px 14px;border:1.5px solid var(--bd);border-radius:12px;
+  background:var(--pl);color:var(--t);font:inherit;transition:border-color .2s,box-shadow .2s,background .2s;
+}
+input::placeholder{color:#a79fc9}
+input:focus,select:focus{outline:0;border-color:var(--p);background:#fff;box-shadow:0 0 0 4px rgba(124,58,237,.15)}
+
+/* ================= BUTTONS ================= */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 20px;border:0;border-radius:12px;position:relative;white-space:nowrap;
+  font:inherit;font-weight:600;color:#fff;cursor:pointer;background:var(--p);
+  box-shadow:0 8px 20px rgba(124,58,237,.3);
+  transition:transform .2s,box-shadow .2s,background .2s,opacity .2s;
+}
+.btn:hover:not(:disabled){transform:translateY(-2px);background:var(--pm);box-shadow:0 12px 26px rgba(124,58,237,.4)}
+.btn:active:not(:disabled){transform:translateY(0)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn.ghost{background:var(--pl);color:var(--pm);border:1.5px solid var(--bd);box-shadow:none}
+.btn.ghost:hover:not(:disabled){background:#ede9fe;box-shadow:none}
+
+.btn.loading{color:transparent;pointer-events:none}
+.btn.loading::after{
+  content:"";position:absolute;inset:0;margin:auto;width:18px;height:18px;
+  border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+
+/* ================= MESSAGES ================= */
+.msg{padding:12px 16px;border-radius:12px;margin:0;font-size:.92rem;border-left:4px solid}
+.msg[hidden]{display:none}
+.msg.error{background:#fef2f2;color:#991b1b;border-color:#ef4444;animation:shake .4s}
+.msg.ok{background:#f0fdf4;color:#166534;border-color:#22c55e;animation:fadeUp .3s}
+
+/* ================= MODAL ================= */
+.modal{
+  position:fixed;inset:0;z-index:100;padding:16px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(46,16,101,.55);backdrop-filter:blur(6px);
+  opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;
+}
+.modal.show{opacity:1;visibility:visible}
+.modal-box{
+  position:relative;width:100%;max-width:560px;max-height:92vh;overflow:auto;
+  display:grid;gap:14px;padding:30px 26px 24px;background:#fff;border-radius:20px;
+  box-shadow:0 25px 60px rgba(46,16,101,.45);
+  transform:translateY(24px) scale(.95);transition:transform .35s cubic-bezier(.2,.8,.2,1);
+}
+.modal.show .modal-box{transform:none}
+.modal-box::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--p)}
+.modal-box h3{margin:0;font-size:1.3rem;text-align:center}
+.modal-box form{display:grid;gap:14px}
+.x{
+  position:absolute;top:14px;right:14px;width:34px;height:34px;display:grid;place-items:center;
+  border:0;border-radius:10px;background:var(--pl);color:var(--pm);cursor:pointer;transition:background .2s;
+}
+.x:hover{background:#ede9fe}
+.row{display:flex;gap:10px;margin-top:4px}
+.row .btn{flex:1}
+
+/* ================= ANIMATIONS ================= */
+@keyframes rise{from{opacity:0;transform:translateY(30px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width:640px){
+  .card{padding:30px 20px 22px}
+  .two-col{grid-template-columns:1fr}
+  .modal-box{padding:26px 18px 20px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}

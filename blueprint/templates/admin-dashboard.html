@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard | Calauan Tourism</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='admin-dashboard.css') }}">
+</head>
+<body>
+
+  <!-- Icons (defined once, used via <use>) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-briefcase" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2.2.7 3.5 2.6 3.5 5.7"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-megaphone" viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 0 0 1 1h3l8 4V6L7 10H4a1 1 0 0 0-1 1z"/><path d="M19 9a4 4 0 0 1 0 6"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></symbol>
+  </svg>
+
+  <div class="overlay" id="overlay"></div>
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar" id="sidebar" aria-label="Main menu">
+    <div class="brand">
+      <div class="logo"><svg class="ic"><use href="#i-shield"/></svg></div>
+      <div>
+        <h2>Calauan Tourism</h2>
+        <small>ADMIN PORTAL</small>
+      </div>
+    </div>
+
+    <nav>
+      <a href="{{ url_for('admin.dashboard') }}" class="active"><svg class="ic"><use href="#i-grid"/></svg>Dashboard</a>
+      <a href="{{ url_for('admin.partners') }}"><svg class="ic"><use href="#i-briefcase"/></svg>Manage Partners</a>
+      <a href="{{ url_for('admin.users') }}"><svg class="ic"><use href="#i-users"/></svg>Manage Users</a>
+      <a href="{{ url_for('admin.bookings') }}"><svg class="ic"><use href="#i-calendar"/></svg>Booking History</a>
+      <a href="{{ url_for('admin.destinations') }}"><svg class="ic"><use href="#i-pin"/></svg>Destinations</a>
+      <a href="{{ url_for('admin.announcements') }}"><svg class="ic"><use href="#i-megaphone"/></svg>Announcements</a>
+      <a href="{{ url_for('admin.contact') }}"><svg class="ic"><use href="#i-phone"/></svg>Contact</a>
+    </nav>
+  </aside>
+
+  <!-- ================= PAGE ================= -->
+  <div class="shell" id="shell">
+
+    <!-- Header -->
+    <header class="topbar">
+      <button type="button" class="icon-btn" id="burger" aria-label="Open or close menu" aria-expanded="false">
+        <svg class="ic"><use href="#i-menu"/></svg>
+      </button>
+
+      <div class="spacer"></div>
+
+      <div class="clock" aria-live="off">
+        <svg class="ic"><use href="#i-clock"/></svg>
+        <div>
+          <small id="clockDate">--</small>
+          <b id="clockTime">--:--:--</b>
+        </div>
+      </div>
+
+      <div class="profile-wrap">
+        <button type="button" class="avatar-btn" id="profileBtn" aria-haspopup="true" aria-expanded="false" aria-label="Profile menu">
+          <span class="avatar">{{ (session.name or 'A')[:1]|upper }}</span>
+          <svg class="ic chev"><use href="#i-chevron"/></svg>
+        </button>
+
+        <div class="menu" id="profileMenu" role="menu">
+          <div class="menu-head">
+            <span class="avatar lg">{{ (session.name or 'A')[:1]|upper }}</span>
+            <div>
+              <b>{{ session.name }}</b>
+              <small>Administrator</small>
+            </div>
+          </div>
+          <a href="{{ url_for('admin.profile') }}" role="menuitem"><svg class="ic"><use href="#i-user"/></svg>Profile</a>
+          <a href="{{ url_for('admin.logout') }}" role="menuitem" class="danger"><svg class="ic"><use href="#i-logout"/></svg>Logout</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Banner -->
+      <section class="banner">
+        <span class="tag">ADMIN PORTAL</span>
+        <h1>Dashboard</h1>
+        <p>Welcome, {{ session.name }}. Here is your Calauan Tourism overview.</p>
+      </section>
+
+      <!-- Stats -->
+      <div class="grid">
+        <div class="card stat">
+          <span class="ico"><svg class="ic"><use href="#i-users"/></svg></span>
+          <div><b data-count="{{ stats.users }}">{{ stats.users }}</b><small>Tourists</small></div>
+        </div>
+        <div class="card stat">
+          <span class="ico"><svg class="ic"><use href="#i-briefcase"/></svg></span>
+          <div><b data-count="{{ stats.partners }}">{{ stats.partners }}</b><small>Active Partners</small></div>
+        </div>
+        <div class="card stat warn">
+          <span class="ico"><svg class="ic"><use href="#i-clock"/></svg></span>
+          <div><b data-count="{{ stats.pending }}">{{ stats.pending }}</b><small>Pending Partners</small></div>
+        </div>
+        <div class="card stat">
+          <span class="ico"><svg class="ic"><use href="#i-calendar"/></svg></span>
+          <div><b data-count="{{ stats.bookings }}">{{ stats.bookings }}</b><small>Bookings</small></div>
+        </div>
+        <div class="card stat">
+          <span class="ico"><svg class="ic"><use href="#i-pin"/></svg></span>
+          <div><b data-count="{{ stats.destinations }}">{{ stats.destinations }}</b><small>Destinations</small></div>
+        </div>
+        <div class="card stat">
+          <span class="ico"><svg class="ic"><use href="#i-megaphone"/></svg></span>
+          <div><b data-count="{{ stats.announcements }}">{{ stats.announcements }}</b><small>Announcements</small></div>
+        </div>
+      </div>
+
+      <div class="two">
+        <div class="card panel">
+          <h3><svg class="ic"><use href="#i-chart"/></svg>Bookings per Month</h3>
+          {% for m in monthly %}
+          <div class="bar">
+            <span>{{ m.m }}</span>
+            <div class="track"><i data-pct="{{ m.pct }}"></i></div>
+            <em>{{ m.c }}</em>
+          </div>
+          {% else %}
+          <p class="empty">No bookings yet.</p>
+          {% endfor %}
+        </div>
+
+        <div class="card panel">
+          <h3><svg class="ic"><use href="#i-clock"/></svg>Awaiting Approval</h3>
+          {% for p in pending %}
+          <div class="pend">
+            <span class="avatar">{{ (p.business_name or 'P')[:1]|upper }}</span>
+            <div>
+              <b>{{ p.business_name }}</b>
+              <small>{{ p.full_name }} · {{ p.created_at.strftime('%b %d, %Y') }}</small>
+            </div>
+          </div>
+          {% else %}
+          <p class="empty">No pending items.</p>
+          {% endfor %}
+          <a href="{{ url_for('admin.partners') }}" class="btn-link">View all <svg class="ic"><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='admin-dashboard.js') }}"></script>
+</body>
+</html>

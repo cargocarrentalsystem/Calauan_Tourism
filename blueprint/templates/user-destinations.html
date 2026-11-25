@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#14532d">
+  <title>Destinations | Calauan Tourism</title>
+  <script>document.documentElement.classList.add("js")</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='user-destinations.css') }}">
+</head>
+<body>
+
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- Icons -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-pineapple" viewBox="0 0 24 24"><path d="M12 8.2C11.6 5.6 10 4.2 8 3M12 8.2C12.4 5.6 14 4.2 16 3M12 8.2V2.5"/><ellipse cx="12" cy="15" rx="5.2" ry="6.8"/><path d="m8.4 11.6 7.2 7.2M15.6 11.6l-7.2 7.2"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></symbol>
+    <symbol id="i-peso" viewBox="0 0 24 24"><path d="M7 20V4h6a4 4 0 0 1 0 8H7M5 8h10M5 11h10"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="m21 16-5-5-8 8"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-nav" viewBox="0 0 24 24"><path d="M3 11 21 3l-8 18-2-8z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.2"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19C5 10 10 5 19 5c0 9-5 14-14 14z"/><path d="M5 19 13 11"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24"><path d="M3 9 5 4h14l2 5"/><path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M5 12v8h14v-8M10 20v-5h4v5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  </svg>
+
+  <!-- ================= HEADER ================= -->
+  <header class="topbar" id="topbar">
+    <a class="brand" href="{{ url_for('user.home') }}">
+      <span class="logo"><svg class="ic" aria-hidden="true"><use href="#i-pineapple"/></svg></span>
+      <div>
+        <h2>Calauan Tourism</h2>
+        <small>LAGUNA</small>
+      </div>
+    </a>
+
+    <div class="spacer"></div>
+
+    <button type="button" class="icon-btn burger" id="burger" aria-label="Open or close menu" aria-expanded="false" aria-controls="nav">
+      <svg class="ic" aria-hidden="true"><use href="#i-menu"/></svg>
+    </button>
+
+    <nav class="nav" id="nav" aria-label="Main menu">
+      <a href="{{ url_for('user.home') }}">Home</a>
+      <a href="{{ url_for('user.contact') }}">Contact</a>
+      <a href="{{ url_for('user.destinations') }}" class="active" aria-current="page">Destinations</a>
+      <a href="{{ url_for('user.establishments') }}">Establishments</a>
+      {% if session.get('role') == 'user' %}
+      <div class="profile-wrap">
+        <button type="button" class="avatar-btn" id="profileBtn" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
+          <span class="avatar">{% if me_img %}<img src="{{ url_for('static', filename='uploads/' ~ me_img) }}" alt="">{% else %}{{ (session.name or 'U')[:1]|upper }}{% endif %}</span>
+          <span class="pname">{{ session.name }}</span>
+          <svg class="ic chev" aria-hidden="true"><use href="#i-chevron"/></svg>
+        </button>
+
+        <div class="menu" id="profileMenu" role="menu">
+          <div class="menu-head">
+            <span class="avatar">{% if me_img %}<img src="{{ url_for('static', filename='uploads/' ~ me_img) }}" alt="">{% else %}{{ (session.name or 'U')[:1]|upper }}{% endif %}</span>
+            <div>
+              <b>{{ session.name }}</b>
+              <small>Tourist</small>
+            </div>
+          </div>
+          <a href="{{ url_for('user.my_bookings') }}" role="menuitem"><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg>My Bookings</a>
+          <a href="{{ url_for('user.profile') }}" role="menuitem"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg>Profile</a>
+          <a href="{{ url_for('user.logout') }}" role="menuitem" class="danger"><svg class="ic" aria-hidden="true"><use href="#i-logout"/></svg>Logout</a>
+        </div>
+      </div>
+      {% else %}
+      <a href="{{ url_for('user.login') }}" class="login">Login</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  {# Mga bilang para sa stats at filter #}
+  {% set cats = rows|map(attribute='category')|select|unique|list %}
+  {% set free_n = rows|rejectattr('entrance_fee')|list|length %}
+
+  <!-- ================= HERO (full width) ================= -->
+  <section class="banner">
+    <div class="scene" aria-hidden="true">
+      <span class="sun"></span>
+      <span class="cloud c1"></span>
+      <span class="cloud c2"></span>
+      <span class="cloud c3"></span>
+      <svg class="range m1" viewBox="0 0 1440 320" preserveAspectRatio="none"><path d="M0 210 L150 120 L260 185 L430 55 L610 200 L790 105 L960 210 L1150 90 L1300 180 L1440 130 V320 H0Z"/></svg>
+      <svg class="range m2" viewBox="0 0 1440 320" preserveAspectRatio="none"><path d="M0 250 L200 150 L360 235 L560 120 L760 245 L980 140 L1180 240 L1440 170 V320 H0Z"/></svg>
+      <svg class="range m3" viewBox="0 0 1440 320" preserveAspectRatio="none"><path d="M0 285 C180 235 340 290 560 262 C780 234 960 292 1180 262 C1300 246 1380 258 1440 270 V320 H0Z"/></svg>
+      <svg class="range m4" viewBox="0 0 1440 320" preserveAspectRatio="none"><path d="M0 305 C240 280 420 312 700 296 C980 280 1200 314 1440 296 V320 H0Z"/></svg>
+    </div>
+
+    <div class="hero-text">
+      <span class="tag"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>DESTINATIONS</span>
+      <h1>Destinations in <em>Calauan</em></h1>
+      <p>Discover waterfalls, parks, farms, and other beautiful places to visit in Calauan, Laguna.</p>
+      <div class="banner-actions">
+        <a href="#browse" class="btn-w">Browse places</a>
+        <a href="#mapSection" class="btn-o">View map</a>
+      </div>
+    </div>
+  </section>
+
+  <main id="main">
+
+    <!-- Stats -->
+    <section class="stats" aria-label="At a glance">
+      <div class="stat">
+        <span class="stat-ic"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg></span>
+        <div><b data-count="{{ rows|length }}">{{ rows|length }}</b><small>Destinations</small></div>
+      </div>
+      <div class="stat">
+        <span class="stat-ic"><svg class="ic" aria-hidden="true"><use href="#i-tag"/></svg></span>
+        <div><b data-count="{{ cats|length }}">{{ cats|length }}</b><small>Categories</small></div>
+      </div>
+      <div class="stat">
+        <span class="stat-ic"><svg class="ic" aria-hidden="true"><use href="#i-peso"/></svg></span>
+        <div><b data-count="{{ free_n }}">{{ free_n }}</b><small>Free entrance</small></div>
+      </div>
+      <div class="stat">
+        <span class="stat-ic"><svg class="ic" aria-hidden="true"><use href="#i-nav"/></svg></span>
+        <div><b id="statPins">0</b><small>On the map</small></div>
+      </div>
+    </section>
+
+    <!-- Map of all destinations -->
+    <section class="section reveal" id="mapSection">
+      <div class="section-head with-tools">
+        <h2><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>Destinations Map</h2>
+        <div class="map-tools" id="mapTools" role="group" aria-label="Map type">
+          <button type="button" class="active" data-layer="street">Street</button>
+          <button type="button" data-layer="sat">Satellite</button>
+        </div>
+      </div>
+      <div class="map-card"><div id="all_map"></div></div>
+      <p class="map-note" id="mapNote" hidden></p>
+    </section>
+
+    <!-- Browse -->
+    <section class="section" id="browse">
+      <div class="section-head">
+        <h2><svg class="ic" aria-hidden="true"><use href="#i-leaf"/></svg>Explore Destinations <span class="count">{{ rows|length }}</span></h2>
+      </div>
+
+      {% if rows %}
+      <div class="toolbar">
+        <label class="search">
+          <svg class="ic" aria-hidden="true"><use href="#i-search"/></svg>
+          <span class="sr">Search destinations</span>
+          <input type="search" id="q" placeholder="Search by name, place or barangay" autocomplete="off">
+        </label>
+        <label class="select">
+          <span class="sr">Entrance fee</span>
+          <select id="feeFilter">
+            <option value="all">All entrance</option>
+            <option value="free">Free only</option>
+            <option value="paid">With entrance fee</option>
+          </select>
+        </label>
+        <label class="select">
+          <span class="sr">Sort by</span>
+          <select id="sortBy">
+            <option value="new">Newest first</option>
+            <option value="name">Name (A–Z)</option>
+            <option value="low">Fee: low to high</option>
+            <option value="high">Fee: high to low</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="chips" id="chips" role="group" aria-label="Filter by category">
+        <button type="button" class="fchip active" data-cat="all">All <small>{{ rows|length }}</small></button>
+        {% for c in cats %}
+        <button type="button" class="fchip" data-cat="{{ c }}"><i class="fdot"></i>{{ c }} <small>{{ rows|selectattr('category','equalto',c)|list|length }}</small></button>
+        {% endfor %}
+      </div>
+
+      <p class="result-line" id="resultLine" aria-live="polite"></p>
+
+      <div class="cards" id="cards">
+        {% for d in rows %}
+        <article class="card dest" tabindex="0" role="button" aria-label="View {{ d.name }}"
+                 data-idx="{{ loop.index0 }}"
+                 data-id="{{ d.id }}" data-name="{{ d.name }}" data-category="{{ d.category or '' }}"
+                 data-location="{{ d.location or '' }}" data-barangay="{{ d.barangay or '' }}"
+                 data-landmark="{{ d.landmark or '' }}" data-description="{{ d.description or '' }}"
+                 data-fee="{{ d.entrance_fee or 0 }}" data-hours="{{ d.opening_hours or '' }}"
+                 data-contact="{{ d.contact or '' }}" data-image="{{ d.image or '' }}"
+                 data-lat="{{ d.latitude or '' }}" data-lng="{{ d.longitude or '' }}">
+          <div class="thumb">
+            {% if d.image %}
+            <img src="{{ url_for('static', filename='uploads/' + d.image) }}" alt="{{ d.name }}" loading="lazy">
+            {% else %}
+            <div class="noimg"><svg class="ic" aria-hidden="true"><use href="#i-image"/></svg></div>
+            {% endif %}
+            {% if d.category %}<span class="chip">{{ d.category }}</span>{% endif %}
+          </div>
+
+          <div class="body">
+            <h3>{{ d.name }}</h3>
+            {% if d.description %}<p class="desc">{{ d.description }}</p>{% endif %}
+
+            <ul class="meta">
+              {% if d.location %}<li><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>{{ d.location }}</li>{% endif %}
+              {% if d.opening_hours %}<li><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>{{ d.opening_hours }}</li>{% endif %}
+              {% if d.contact %}<li><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>{{ d.contact }}</li>{% endif %}
+            </ul>
+
+            <div class="fee">
+              <svg class="ic" aria-hidden="true"><use href="#i-peso"/></svg>
+              {% if d.entrance_fee and d.entrance_fee > 0 %}
+              <b>₱{{ "{:,.2f}".format(d.entrance_fee) }}</b><small>entrance fee</small>
+              {% else %}
+              <b>Free</b><small>entrance</small>
+              {% endif %}
+              <button type="button" class="btn sm btn-view">View</button>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+
+      <div class="no-match" id="noMatch" hidden>
+        <svg class="ic" aria-hidden="true"><use href="#i-search"/></svg>
+        <b>No destinations match your search</b>
+        <span>Try another keyword or clear the filters.</span>
+        <button type="button" class="btn sm" id="resetFilters">Clear filters</button>
+      </div>
+      {% else %}
+      <p class="empty-box">No published destinations yet.</p>
+      {% endif %}
+    </section>
+
+    <!-- Tips -->
+    <section class="section reveal" id="tips">
+      <div class="section-head">
+        <h2><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg>Plan Your Visit</h2>
+      </div>
+      <div class="tips">
+        <article class="tip">
+          <span class="tip-ic"><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg></span>
+          <h3>Check the opening hours</h3>
+          <p>Open each destination to see its schedule, so you arrive when it is open.</p>
+        </article>
+        <article class="tip">
+          <span class="tip-ic"><svg class="ic" aria-hidden="true"><use href="#i-peso"/></svg></span>
+          <h3>Bring some cash</h3>
+          <p>Entrance fees and small local stores are often paid in cash. Check the fee before you go.</p>
+        </article>
+        <article class="tip">
+          <span class="tip-ic"><svg class="ic" aria-hidden="true"><use href="#i-nav"/></svg></span>
+          <h3>Plan your route</h3>
+          <p>Use Get Directions inside a destination to see the distance and drive time from where you are.</p>
+        </article>
+        <article class="tip">
+          <span class="tip-ic"><svg class="ic" aria-hidden="true"><use href="#i-leaf"/></svg></span>
+          <h3>Keep it green</h3>
+          <p>Take your trash with you and respect the farms, trails and waters of Calauan.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta reveal" aria-label="Establishments">
+      <svg class="cta-pine ic" aria-hidden="true"><use href="#i-pineapple"/></svg>
+      <div class="cta-text">
+        <h2>Need a place to stay or eat?</h2>
+        <p>Book local resorts and businesses in Calauan and support our community.</p>
+      </div>
+      <a class="btn-w" href="{{ url_for('user.establishments') }}">Browse Establishments <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    <svg class="footer-hills" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 80 V50 L160 18 L300 46 L480 6 L660 44 L840 14 L1020 48 L1200 10 L1340 40 L1440 24 V80Z"/>
+    </svg>
+    <div class="footer-in">
+      <div>
+        <a class="brand" href="{{ url_for('user.home') }}">
+          <span class="logo"><svg class="ic" aria-hidden="true"><use href="#i-pineapple"/></svg></span>
+          <div>
+            <h2>Calauan Tourism</h2>
+            <small>LAGUNA</small>
+          </div>
+        </a>
+        <p class="footer-note">Sweet pineapples, green mountains and warm people. Visit Calauan and support our local businesses.</p>
+      </div>
+      <nav class="footer-links" aria-label="Footer menu">
+        <a href="{{ url_for('user.home') }}">Home</a>
+        <a href="{{ url_for('user.destinations') }}">Destinations</a>
+        <a href="{{ url_for('user.establishments') }}">Establishments</a>
+        <a href="{{ url_for('user.contact') }}">Contact</a>
+      </nav>
+    </div>
+    <div class="footer-copy">&copy; <span id="year"></span> Calauan Tourism, Laguna. All rights reserved.</div>
+  </footer>
+
+  <!-- Modal: destination details (with image and map) -->
+  <div class="modal" id="destModal" data-uploads="{{ url_for('static', filename='uploads/') }}">
+    <div class="modal-box dm-box" role="dialog" aria-modal="true" aria-labelledby="dm_name">
+      <button type="button" class="modal-x" id="dm_close" aria-label="Close"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
+
+      <div class="em-main" id="dm_image_wrap" hidden><img id="dm_image" alt=""></div>
+
+      <div class="em-info">
+        <span class="chip soft" id="dm_category"></span>
+        <h3 id="dm_name"></h3>
+        <p class="em-desc" id="dm_desc"></p>
+
+        <ul class="meta">
+          <li id="dm_address_li"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg><span id="dm_address"></span></li>
+          <li id="dm_barangay_li"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg><span id="dm_barangay"></span></li>
+          <li id="dm_landmark_li"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg><span id="dm_landmark"></span></li>
+          <li id="dm_hours_li"><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg><span id="dm_hours"></span></li>
+          <li id="dm_contact_li"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg><span id="dm_contact"></span></li>
+          <li id="dm_fee_li"><svg class="ic" aria-hidden="true"><use href="#i-peso"/></svg><span id="dm_fee"></span></li>
+        </ul>
+
+        <div class="dm-map" id="dm_map_wrap" hidden>
+          <div class="dm-map-head">
+            <b>Location on map</b>
+            <div class="map-tools" role="group" aria-label="Map type">
+              <button type="button" class="active" data-layer="street">Street</button>
+              <button type="button" data-layer="sat">Satellite</button>
+            </div>
+          </div>
+          <div id="dm_map"></div>
+
+          <div class="dm-dir-actions">
+            <button type="button" class="btn sm" id="dm_dir"><svg class="ic" aria-hidden="true"><use href="#i-nav"/></svg><span>Get Directions</span></button>
+            <button type="button" class="btn sm ghost" id="dm_dir_clear" hidden>Clear route</button>
+          </div>
+          <p class="dm-msg" id="dm_dir_msg" hidden></p>
+
+          <div class="dm-sum" id="dm_dir_sum" hidden>
+            <svg class="ic" aria-hidden="true"><use href="#i-nav"/></svg>
+            <b id="dm_dist"></b>
+            <span id="dm_time"></span>
+          </div>
+          <details class="dm-steps" id="dm_dir_steps" hidden>
+            <summary>Route steps</summary>
+            <ol id="dm_steps"></ol>
+          </details>
+
+          <a class="dm-link" id="dm_gmaps" href="#" target="_blank" rel="noopener">Open in Google Maps →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="{{ url_for('static', filename='user-destinations.js') }}"></script>
+</body>
+</html>

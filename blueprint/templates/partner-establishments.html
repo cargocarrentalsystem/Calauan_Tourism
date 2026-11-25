@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14532d">
+  <title>Manage Establishments | Calauan Tourism Partner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='partner-establishments.css') }}">
+</head>
+<body>
+
+  <!-- Icons (defined once, used via <use>) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24"><path d="M3 9 5 4h14l2 5"/><path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M5 12v8h14v-8M10 20v-5h4v5"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.2"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="m21 16-5-5-8 8"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></symbol>
+    <symbol id="i-pineapple" viewBox="0 0 24 24"><path d="M12 8.2C11.6 5.6 10 4.2 8 3M12 8.2C12.4 5.6 14 4.2 16 3M12 8.2V2.5"/><ellipse cx="12" cy="15" rx="5.2" ry="6.8"/><path d="m8.4 11.6 7.2 7.2M15.6 11.6l-7.2 7.2"/></symbol>
+  </svg>
+
+  <div class="overlay" id="overlay"></div>
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar" id="sidebar" aria-label="Main menu">
+    <div class="brand">
+      <div class="logo"><svg class="ic" aria-hidden="true"><use href="#i-pineapple"/></svg></div>
+      <div>
+        <h2>Calauan Tourism</h2>
+        <small>PARTNER PORTAL</small>
+      </div>
+    </div>
+
+    <nav>
+      <a href="{{ url_for('partner.dashboard') }}"><svg class="ic"><use href="#i-grid"/></svg>Dashboard</a>
+      <a href="{{ url_for('partner.bookings') }}"><svg class="ic"><use href="#i-calendar"/></svg>Bookings</a>
+      <a href="{{ url_for('partner.establishments') }}" class="active"><svg class="ic"><use href="#i-store"/></svg>Manage Establishments</a>
+    </nav>
+  </aside>
+
+  <!-- ================= PAGE ================= -->
+  <div class="shell" id="shell">
+
+    <!-- Header -->
+    <header class="topbar">
+      <button type="button" class="icon-btn" id="burger" aria-label="Open or close menu" aria-expanded="false">
+        <svg class="ic"><use href="#i-menu"/></svg>
+      </button>
+
+      <div class="spacer"></div>
+
+      <div class="clock" aria-live="off">
+        <svg class="ic"><use href="#i-clock"/></svg>
+        <div>
+          <small id="clockDate">--</small>
+          <b id="clockTime">--:--:--</b>
+        </div>
+      </div>
+
+      <div class="profile-wrap">
+        <button type="button" class="avatar-btn" id="profileBtn" aria-haspopup="true" aria-expanded="false" aria-label="Profile menu">
+          <span class="avatar">{{ (session.name or 'P')[:1]|upper }}</span>
+          <svg class="ic chev"><use href="#i-chevron"/></svg>
+        </button>
+
+        <div class="menu" id="profileMenu" role="menu">
+          <div class="menu-head">
+            <span class="avatar lg">{{ (session.name or 'P')[:1]|upper }}</span>
+            <div>
+              <b>{{ session.name }}</b>
+              <small>Partner</small>
+            </div>
+          </div>
+          <a href="{{ url_for('partner.profile') }}" role="menuitem"><svg class="ic"><use href="#i-user"/></svg>Profile</a>
+          <a href="{{ url_for('partner.logout') }}" role="menuitem" class="danger"><svg class="ic"><use href="#i-logout"/></svg>Logout</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Banner -->
+      <section class="banner">
+        <span class="tag">PARTNER PORTAL</span>
+        <h1>Manage Establishments</h1>
+        <p>Add, edit, or remove establishments for your business.</p>
+      </section>
+
+      <div id="msg" class="msg" hidden></div>
+
+      <!-- Search and Add -->
+      <div class="toolbar">
+        <form method="get" class="search">
+          <div class="field">
+            <svg class="ic"><use href="#i-search"/></svg>
+            <input name="q" value="{{ q }}" placeholder="Search for an establishment...">
+          </div>
+          <button class="btn">Search</button>
+        </form>
+
+        <button type="button" class="btn" id="btnAdd"><svg class="ic"><use href="#i-plus"/></svg>Add Establishment</button>
+      </div>
+
+      <!-- Establishments table -->
+      <div class="card panel">
+        <h3><svg class="ic"><use href="#i-store"/></svg>Establishments <span class="count">{{ rows|length }}</span></h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Establishment</th><th>Category</th><th>Address</th><th>Contact</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              {% for r in rows %}
+              <tr data-id="{{ r.business_id }}" data-code="{{ r.business_id }}"
+                  data-business="{{ r.business_name }}" data-category="{{ r.category or '' }}"
+                  data-address="{{ r.address or '' }}" data-contact="{{ r.contact or '' }}"
+                  data-barangay="{{ r.barangay or '' }}" data-landmark="{{ r.landmark or '' }}"
+                  data-lat="{{ r.latitude or '' }}" data-lng="{{ r.longitude or '' }}"
+                  data-description="{{ r.description or '' }}"
+                  data-qr="{{ r.gcash_qr or '' }}"
+                  data-images='{{ r.images|tojson }}'
+                  data-delete-url="{{ url_for('partner.establishment_delete', bid=r.business_id) }}">
+                <td data-label="Establishment">
+                  <div class="who">
+                    {% if r.images %}
+                    <img class="thumb-sm" src="{{ url_for('static', filename='uploads/' + r.images[0].image) }}" alt="">
+                    {% else %}
+                    <span class="avatar">{{ (r.business_name or 'E')[:1]|upper }}</span>
+                    {% endif %}
+                    <div>
+                      <b>{{ r.business_name }}</b>
+                      <small>{{ r.business_id or '' }}</small>
+                    </div>
+                  </div>
+                </td>
+                <td data-label="Category">{{ r.category or '—' }}</td>
+                <td data-label="Address">{{ r.address or '—' }}</td>
+                <td data-label="Contact">{{ r.contact or '—' }}</td>
+                <td data-label="Actions">
+                  <div class="actions">
+                    <button type="button" class="btn sm ghost btn-view"><svg class="ic"><use href="#i-eye"/></svg>View</button>
+                    <button type="button" class="btn sm btn-edit"><svg class="ic"><use href="#i-edit"/></svg>Edit</button>
+                    <button type="button" class="btn sm bad btn-del"><svg class="ic"><use href="#i-trash"/></svg>Delete</button>
+                  </div>
+                </td>
+              </tr>
+              {% else %}
+              <tr class="none"><td colspan="5"><p class="empty-box">No establishments yet.</p></td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal: establishment details -->
+  <div class="modal" id="viewModal" data-uploads="{{ url_for('static', filename='uploads/') }}">
+    <div class="modal-box">
+      <div class="logo sm"><svg class="ic"><use href="#i-store"/></svg></div>
+      <h3 id="v_business"></h3>
+      <p class="hint" id="v_code"></p>
+
+      <div class="info"><svg class="ic"><use href="#i-tag"/></svg><div><small>Category</small><b id="v_category"></b></div></div>
+      <div class="info"><svg class="ic"><use href="#i-pin"/></svg><div><small>Address</small><b id="v_address"></b></div></div>
+      <div class="info"><svg class="ic"><use href="#i-pin"/></svg><div><small>Barangay</small><b id="v_barangay"></b></div></div>
+      <div class="info"><svg class="ic"><use href="#i-pin"/></svg><div><small>Nearest Landmark</small><b id="v_landmark"></b></div></div>
+      <div class="info"><svg class="ic"><use href="#i-phone"/></svg><div><small>Contact</small><b id="v_contact"></b></div></div>
+      <div class="info"><svg class="ic"><use href="#i-doc"/></svg><div><small>Description</small><b id="v_description"></b></div></div>
+
+      <div id="v_map_wrap" hidden>
+        <a id="v_map" class="map-link" href="#" target="_blank" rel="noopener"><svg class="ic"><use href="#i-pin"/></svg>View on map</a>
+      </div>
+
+      <div id="v_gallery_wrap" class="vg" hidden>
+        <small>Photos</small>
+        <div class="v-gallery" id="v_gallery"></div>
+      </div>
+
+      <div id="v_qr_wrap" class="qr" hidden>
+        <small>GCash QR</small>
+        <img id="v_qr" alt="GCash QR">
+      </div>
+
+      <button type="button" class="btn ghost" id="v_close">Close</button>
+    </div>
+  </div>
+
+  <!-- Modal: add / edit -->
+  <div class="modal" id="formModal" data-boundary="{{ url_for('static', filename='calauan.geojson') }}">
+    <div class="modal-box wide">
+      <div class="logo sm"><svg class="ic"><use href="#i-store"/></svg></div>
+      <h3 id="fTitle"></h3>
+      <p class="hint" id="fHint"></p>
+
+      <div id="fMsg" class="msg" hidden></div>
+
+      <form id="estForm" class="form" novalidate data-url="{{ url_for('partner.establishment_save') }}">
+        <input type="hidden" name="est_id" id="f_id">
+        <input type="hidden" name="latitude" id="f_lat">
+        <input type="hidden" name="longitude" id="f_lng">
+
+        <div class="form-cols">
+
+          <!-- LEFT: details -->
+          <div class="col">
+            <div class="fld">
+              <label for="f_business">Establishment Name</label>
+              <input type="text" name="business_name" id="f_business" maxlength="150" autocomplete="off">
+            </div>
+
+            <div class="fld-row">
+              <div class="fld">
+                <label for="f_category">Category</label>
+                <input type="text" name="category" id="f_category" maxlength="50" autocomplete="off">
+              </div>
+              <div class="fld">
+                <label for="f_contact">Contact Number</label>
+                <input type="text" name="contact" id="f_contact" maxlength="50" autocomplete="off">
+              </div>
+            </div>
+
+            <div class="fld-row">
+              <div class="fld">
+                <label for="f_province">Province</label>
+                <input type="text" id="f_province" value="Laguna" readonly tabindex="-1">
+              </div>
+              <div class="fld">
+                <label for="f_city">City / Municipality</label>
+                <input type="text" id="f_city" value="Calauan" readonly tabindex="-1">
+              </div>
+            </div>
+
+            <div class="fld">
+              <label for="f_barangay">Barangay</label>
+              <select name="barangay" id="f_barangay">
+                <option value="">Select a barangay</option>
+                {% for b in barangays %}
+                <option value="{{ b }}">{{ b }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="fld">
+              <label for="f_landmark">Street / Nearest Landmark</label>
+              <input type="text" name="landmark" id="f_landmark" maxlength="255" autocomplete="off" placeholder="e.g. Beside the church, across from the market">
+            </div>
+
+            <div class="fld">
+              <label for="f_address">Complete Address</label>
+              <input type="text" name="address" id="f_address" maxlength="255" autocomplete="off">
+            </div>
+
+            <div class="fld">
+              <label for="f_description">Description (optional)</label>
+              <textarea name="description" id="f_description" rows="2"></textarea>
+            </div>
+
+            <div class="fld">
+              <label>GCash QR</label>
+              <div class="upload">
+                <img id="f_qr_preview" alt="QR preview" hidden>
+                <small id="f_qr_name"></small>
+                <input type="file" name="qr" id="f_qr" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp">
+                <label for="f_qr" class="btn sm ghost"><svg class="ic"><use href="#i-upload"/></svg>Choose QR</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: map and photos -->
+          <div class="col">
+            <div class="fld">
+              <label>Pin the location (within Calauan only)</label>
+              <div class="map-tools" role="group" aria-label="Map type">
+                <button type="button" class="active" data-layer="street">Street</button>
+                <button type="button" data-layer="sat">Satellite</button>
+              </div>
+              <div id="f_map"></div>
+              <small class="g-hint" id="f_pin_hint"></small>
+              <div id="f_pin_msg" class="msg" hidden></div>
+            </div>
+
+            <div class="fld">
+              <label>Establishment Photos (optional)</label>
+              <div class="gallery-box">
+                <div class="gallery" id="f_gallery"></div>
+                <small class="g-hint" id="f_gallery_hint"></small>
+                <input type="file" id="f_images" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp" multiple>
+                <label for="f_images" class="btn sm ghost"><svg class="ic"><use href="#i-image"/></svg>Add Photos</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <button type="button" class="btn ghost" id="fCancel">Cancel</button>
+          <button type="submit" class="btn" id="fOk">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: delete confirmation -->
+  <div class="modal" id="confirmModal">
+    <div class="modal-box small">
+      <div class="logo sm danger"><svg class="ic"><use href="#i-trash"/></svg></div>
+      <h3>Delete this establishment?</h3>
+      <p class="hint" id="cmText"></p>
+      <div class="row">
+        <button type="button" class="btn ghost" id="cmCancel">Cancel</button>
+        <button type="button" class="btn bad" id="cmOk">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="{{ url_for('static', filename='partner-establishments.js') }}"></script>
+</body>
+</html>

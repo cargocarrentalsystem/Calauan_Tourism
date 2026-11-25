@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#14532d">
+  <title>My Profile | Calauan Tourism</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='user-profile.css') }}">
+</head>
+<body>
+
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- Icons -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-pineapple" viewBox="0 0 24 24"><path d="M12 8.2C11.6 5.6 10 4.2 8 3M12 8.2C12.4 5.6 14 4.2 16 3M12 8.2V2.5"/><ellipse cx="12" cy="15" rx="5.2" ry="6.8"/><path d="m8.4 11.6 7.2 7.2M15.6 11.6l-7.2 7.2"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+  </svg>
+
+  <!-- ================= HEADER ================= -->
+  <header class="topbar" id="topbar">
+    <a class="brand" href="{{ url_for('user.home') }}">
+      <span class="logo"><svg class="ic" aria-hidden="true"><use href="#i-pineapple"/></svg></span>
+      <div>
+        <h2>Calauan Tourism</h2>
+        <small>LAGUNA</small>
+      </div>
+    </a>
+
+    <div class="spacer"></div>
+
+    <button type="button" class="icon-btn burger" id="burger" aria-label="Open or close the menu" aria-expanded="false" aria-controls="nav">
+      <svg class="ic" aria-hidden="true"><use href="#i-menu"/></svg>
+    </button>
+
+    <nav class="nav" id="nav" aria-label="Main menu">
+      <a href="{{ url_for('user.home') }}">Home</a>
+      <a href="{{ url_for('user.contact') }}">Contact</a>
+      <a href="{{ url_for('user.destinations') }}">Destinations</a>
+      <a href="{{ url_for('user.establishments') }}">Establishments</a>
+
+      <div class="profile-wrap">
+        <button type="button" class="avatar-btn" id="profileBtn" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
+          <span class="avatar">{% if u.profile_image %}<img src="{{ url_for('static', filename='uploads/' ~ u.profile_image) }}" alt="">{% else %}{{ (u.full_name or 'U')[:1]|upper }}{% endif %}</span>
+          <span class="pname">{{ u.full_name }}</span>
+          <svg class="ic chev" aria-hidden="true"><use href="#i-chevron"/></svg>
+        </button>
+
+        <div class="menu" id="profileMenu" role="menu">
+          <div class="menu-head">
+            <span class="avatar">{% if u.profile_image %}<img src="{{ url_for('static', filename='uploads/' ~ u.profile_image) }}" alt="">{% else %}{{ (u.full_name or 'U')[:1]|upper }}{% endif %}</span>
+            <div>
+              <b>{{ u.full_name }}</b>
+              <small>Tourist</small>
+            </div>
+          </div>
+          <a href="{{ url_for('user.my_bookings') }}" role="menuitem"><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg>My Bookings</a>
+          <a href="{{ url_for('user.profile') }}" role="menuitem" aria-current="page"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg>Profile</a>
+          <a href="{{ url_for('user.logout') }}" role="menuitem" class="danger"><svg class="ic" aria-hidden="true"><use href="#i-logout"/></svg>Logout</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ================= BANNER ================= -->
+  <section class="banner">
+    <div class="scene" aria-hidden="true">
+      <span class="sun"></span>
+      <span class="cloud c1"></span>
+      <span class="cloud c2"></span>
+      <svg class="range m1" viewBox="0 0 1440 320" preserveAspectRatio="none"><path d="M0 210 L150 120 L260 185 L430 55 L610 200 L790 105 L960 210 L1150 90 L1300 180 L1440 130 V320 H0Z"/></svg>
+      <svg class="range m2" viewBox="0 0 1440 320" preserveAspectRatio="none"><path d="M0 250 L200 150 L360 235 L560 120 L760 245 L980 140 L1180 240 L1440 170 V320 H0Z"/></svg>
+      <svg class="range m3" viewBox="0 0 1440 320" preserveAspectRatio="none"><path d="M0 285 C180 235 340 290 560 262 C780 234 960 292 1180 262 C1300 246 1380 258 1440 270 V320 H0Z"/></svg>
+    </div>
+
+    <div class="hero-text">
+      <span class="tag"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg>MY PROFILE</span>
+      <h1>My <em>Profile</em></h1>
+      <p>Update your details, change your password, and add a profile picture.</p>
+    </div>
+  </section>
+
+  <!-- ================= PAGE ================= -->
+  <main id="main" data-uploads="{{ url_for('static', filename='uploads/') }}"
+        data-image="{{ u.profile_image or '' }}" data-name="{{ u.full_name }}">
+    <div class="pf-grid">
+
+      <!-- Left: photo -->
+      <aside class="pf-card pf-side" data-photo-url="{{ url_for('user.profile_photo') }}"
+             data-remove-url="{{ url_for('user.profile_photo_remove') }}">
+        <div class="pf-avatar" id="av_box">{% if u.profile_image %}<img src="{{ url_for('static', filename='uploads/' ~ u.profile_image) }}" alt="Profile photo">{% else %}{{ (u.full_name or 'U')[:1]|upper }}{% endif %}</div>
+        <h2 id="pf_title">{{ u.full_name }}</h2>
+        {% if u.user_code %}<span class="pf-code">{{ u.user_code }}</span>{% endif %}
+
+        <ul class="pf-meta">
+          <li><svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg>{{ u.email }}</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg>Member since {{ u.created_at.strftime('%b %d, %Y') }}</li>
+        </ul>
+
+        <div id="avMsg" class="msg" role="alert" hidden></div>
+
+        <div class="pf-actions">
+          <input type="file" id="av_file" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp" hidden>
+          <label for="av_file" class="btn sm" id="av_pick"><svg class="ic" aria-hidden="true"><use href="#i-upload"/></svg>Change photo</label>
+          <button type="button" class="btn sm ghost" id="av_remove" {% if not u.profile_image %}hidden{% endif %}><svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg>Remove</button>
+        </div>
+        <p class="note">PNG, JPG, JPEG, or WEBP. Up to 5MB.</p>
+      </aside>
+
+      <!-- Right: forms -->
+      <div class="pf-stack">
+
+        <section class="pf-card">
+          <div class="section-head">
+            <h2><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg>Personal details</h2>
+          </div>
+
+          <div id="pfMsg" class="msg" role="alert" hidden></div>
+
+          <form id="pfForm" class="form" novalidate data-url="{{ url_for('user.profile_update') }}">
+            <div class="fld">
+              <label for="pf_name">Full Name</label>
+              <input type="text" name="full_name" id="pf_name" maxlength="150" autocomplete="name" value="{{ u.full_name }}">
+            </div>
+            <div class="fld">
+              <label for="pf_email">Email</label>
+              <input type="email" id="pf_email" value="{{ u.email }}" readonly>
+              <small class="field-note">Your email is used to log in and can't be changed.</small>
+            </div>
+            <div class="row2">
+              <div class="fld">
+                <label for="pf_contact">Contact Number</label>
+                <input type="text" name="contact" id="pf_contact" maxlength="50" autocomplete="tel" value="{{ u.contact or '' }}">
+              </div>
+              <div class="fld">
+                <label for="pf_gender">Gender</label>
+                <select name="gender" id="pf_gender">
+                  <option value="">Select...</option>
+                  <option value="male" {% if u.gender == 'male' %}selected{% endif %}>Male</option>
+                  <option value="female" {% if u.gender == 'female' %}selected{% endif %}>Female</option>
+                  <option value="other" {% if u.gender == 'other' %}selected{% endif %}>Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="fld">
+              <label for="pf_address">Address</label>
+              <input type="text" name="address" id="pf_address" maxlength="255" autocomplete="street-address" value="{{ u.address or '' }}">
+            </div>
+            <button type="submit" class="btn" id="pfOk">Save changes</button>
+          </form>
+        </section>
+
+        <section class="pf-card">
+          <div class="section-head">
+            <h2><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg>Change password</h2>
+          </div>
+
+          <div id="pwMsg" class="msg" role="alert" hidden></div>
+
+          <form id="pwForm" class="form" novalidate data-url="{{ url_for('user.profile_password') }}">
+            <div class="fld">
+              <label for="pw_current">Current Password</label>
+              <input type="password" name="current_password" id="pw_current" autocomplete="current-password">
+            </div>
+            <div class="row2">
+              <div class="fld">
+                <label for="pw_new">New Password</label>
+                <input type="password" name="new_password" id="pw_new" autocomplete="new-password">
+              </div>
+              <div class="fld">
+                <label for="pw_confirm">Confirm New Password</label>
+                <input type="password" name="confirm_password" id="pw_confirm" autocomplete="new-password">
+              </div>
+            </div>
+            <button type="submit" class="btn" id="pwOk">Update password</button>
+          </form>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    <svg class="footer-hills" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 80 V50 L160 18 L300 46 L480 6 L660 44 L840 14 L1020 48 L1200 10 L1340 40 L1440 24 V80Z"/>
+    </svg>
+    <div class="footer-copy">&copy; <span id="year"></span> Calauan Tourism, Laguna. All rights reserved.</div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='user-profile.js') }}"></script>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>

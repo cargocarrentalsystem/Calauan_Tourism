@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14532d">
+  <title>Bookings | Calauan Tourism Partner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='partner-bookings.css') }}">
+</head>
+<body>
+
+  <!-- Icons -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24"><path d="M3 9 5 4h14l2 5"/><path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M5 12v8h14v-8M10 20v-5h4v5"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2.2.7 3.5 2.6 3.5 5.7"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-peso" viewBox="0 0 24 24"><path d="M7 20V4h6a4 4 0 0 1 0 8H7M5 8h10M5 11h10"/></symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.2"/></symbol>
+    <symbol id="i-pineapple" viewBox="0 0 24 24"><path d="M12 8.2C11.6 5.6 10 4.2 8 3M12 8.2C12.4 5.6 14 4.2 16 3M12 8.2V2.5"/><ellipse cx="12" cy="15" rx="5.2" ry="6.8"/><path d="m8.4 11.6 7.2 7.2M15.6 11.6l-7.2 7.2"/></symbol>
+  </svg>
+
+  <div class="overlay" id="overlay"></div>
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar" id="sidebar" aria-label="Main menu">
+    <div class="brand">
+      <div class="logo"><svg class="ic" aria-hidden="true"><use href="#i-pineapple"/></svg></div>
+      <div>
+        <h2>Calauan Tourism</h2>
+        <small>PARTNER PORTAL</small>
+      </div>
+    </div>
+
+    <nav>
+      <a href="{{ url_for('partner.dashboard') }}"><svg class="ic"><use href="#i-grid"/></svg>Dashboard</a>
+      <a href="{{ url_for('partner.bookings') }}" class="active"><svg class="ic"><use href="#i-calendar"/></svg>Bookings</a>
+      <a href="{{ url_for('partner.establishments') }}"><svg class="ic"><use href="#i-store"/></svg>Manage Establishments</a>
+    </nav>
+  </aside>
+
+  <!-- ================= PAGE ================= -->
+  <div class="shell" id="shell">
+
+    <header class="topbar">
+      <button type="button" class="icon-btn" id="burger" aria-label="Open or close the menu" aria-expanded="false">
+        <svg class="ic"><use href="#i-menu"/></svg>
+      </button>
+
+      <div class="spacer"></div>
+
+      <div class="clock" aria-live="off">
+        <svg class="ic"><use href="#i-clock"/></svg>
+        <div>
+          <small id="clockDate">--</small>
+          <b id="clockTime">--:--:--</b>
+        </div>
+      </div>
+
+      <div class="profile-wrap">
+        <button type="button" class="avatar-btn" id="profileBtn" aria-haspopup="true" aria-expanded="false" aria-label="Profile menu">
+          <span class="avatar">{{ (session.name or 'P')[:1]|upper }}</span>
+          <svg class="ic chev"><use href="#i-chevron"/></svg>
+        </button>
+
+        <div class="menu" id="profileMenu" role="menu">
+          <div class="menu-head">
+            <span class="avatar lg">{{ (session.name or 'P')[:1]|upper }}</span>
+            <div>
+              <b>{{ session.name }}</b>
+              <small>Partner</small>
+            </div>
+          </div>
+          <a href="{{ url_for('partner.profile') }}" role="menuitem"><svg class="ic"><use href="#i-user"/></svg>Profile</a>
+          <a href="{{ url_for('partner.logout') }}" role="menuitem" class="danger"><svg class="ic"><use href="#i-logout"/></svg>Logout</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="banner">
+        <span class="tag">PARTNER PORTAL</span>
+        <h1>Bookings</h1>
+        <p>Review booking requests, track arrivals, send bills, and confirm payments.</p>
+      </section>
+
+      <!-- Status tabs -->
+      <nav class="tabs" aria-label="Booking status">
+        {% for s, label in [('all','All'),('pending','Pending'),('approved','Approved'),('arrived','Arrived'),('completed','Completed'),('rejected','Rejected')] %}
+        <a href="{{ url_for('partner.bookings', status=s) }}" class="{{ 'on' if s == status }}">{{ label }}<span class="n">{{ counts.get(s, 0) }}</span></a>
+        {% endfor %}
+      </nav>
+
+      <!-- Search -->
+      <form method="get" class="search">
+        <input type="hidden" name="status" value="{{ status }}">
+        <div class="field">
+          <svg class="ic"><use href="#i-search"/></svg>
+          <input name="q" value="{{ q }}" placeholder="Search booking ID or tourist...">
+        </div>
+        <button class="btn">Search</button>
+      </form>
+
+      <div class="card panel">
+        <h3><svg class="ic"><use href="#i-calendar"/></svg>Bookings <span class="count">{{ rows|length }}</span></h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Booking</th><th>Tourist</th><th>Establishment</th><th>Date and time</th><th>Guests</th><th>Bill</th><th>Status</th><th>Payment</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+              {% for r in rows %}
+              <tr data-id="{{ r.id }}" data-code="{{ r.booking_code or ('#' ~ r.id) }}"
+                  data-tourist="{{ r.tourist }}" data-email="{{ r.email or '' }}" data-contact="{{ r.contact or '' }}"
+                  data-place="{{ r.business_name or '' }}" data-dates="{{ r.dates }}" data-time="{{ r.time }}"
+                  data-guests="{{ r.guests or 1 }}" data-status="{{ r.status }}" data-amount="{{ r.amount }}"
+                  data-pay="{{ 1 if r.payment_status else 0 }}" data-ref="{{ r.payment_ref or '' }}"
+                  data-receipt="{{ r.payment_receipt or '' }}"
+                  data-action-url="{{ url_for('partner.booking_action', bid=r.id, action='ACTION') }}">
+                <td data-label="Booking">
+                  <div class="owner">
+                    <b>{{ r.booking_code or ('#' ~ r.id) }}</b>
+                    <small>{{ r.created_at.strftime('%b %d, %Y') }}</small>
+                  </div>
+                </td>
+                <td data-label="Tourist">
+                  <div class="who">
+                    <span class="avatar">{{ (r.tourist or 'T')[:1]|upper }}</span>
+                    <div>
+                      <b>{{ r.tourist }}</b>
+                      <small>{{ r.email or '' }}</small>
+                    </div>
+                  </div>
+                </td>
+                <td data-label="Establishment">{{ r.business_name or '—' }}</td>
+                <td data-label="Date and time">
+                  <div class="owner">
+                    <b>{{ r.dates }}</b>
+                    <small>{{ r.time }}</small>
+                  </div>
+                </td>
+                <td data-label="Guests">{{ r.guests or 1 }}</td>
+                <td data-label="Bill"><b class="amt">{{ "₱{:,.2f}".format(r.amount) if r.amount else '—' }}</b></td>
+                <td data-label="Status"><span class="badge st-badge {{ r.status }}">{{ r.status|capitalize }}</span></td>
+                <td data-label="Payment"><span class="badge pay-badge {{ 'paid' if r.payment_status else 'unpaid' }}">{{ 'Paid' if r.payment_status else 'Unpaid' }}</span></td>
+                <td data-label="Action">
+                  <div class="actions">
+                    <button type="button" class="btn sm ghost btn-view"><svg class="ic"><use href="#i-eye"/></svg>View</button>
+                  </div>
+                </td>
+              </tr>
+              {% else %}
+              <tr class="none"><td colspan="9"><p class="empty-box">No bookings found.</p></td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal: booking details -->
+  <div class="modal" id="dModal" data-uploads="{{ url_for('static', filename='uploads/') }}">
+    <div class="modal-box">
+      <div class="logo sm"><svg class="ic"><use href="#i-calendar"/></svg></div>
+      <h3 id="d_code"></h3>
+      <div class="d-badges"><span class="badge" id="d_status"></span><span class="badge" id="d_pay"></span></div>
+
+      <ol class="steps" id="d_steps"></ol>
+      <div id="d_msg" class="msg" hidden></div>
+
+      <div class="info"><svg class="ic"><use href="#i-user"/></svg><div><small>Tourist</small><b id="d_tourist"></b></div></div>
+      <div class="info"><svg class="ic"><use href="#i-mail"/></svg><div><small>Email</small><b id="d_email"></b></div></div>
+      <div class="info"><svg class="ic"><use href="#i-phone"/></svg><div><small>Contact</small><b id="d_contact"></b></div></div>
+      <div class="info"><svg class="ic"><use href="#i-store"/></svg><div><small>Establishment</small><b id="d_place"></b></div></div>
+      <div class="info"><svg class="ic"><use href="#i-calendar"/></svg><div><small>Dates</small><b id="d_dates"></b></div></div>
+      <div class="info"><svg class="ic"><use href="#i-clock"/></svg><div><small>Time</small><b id="d_time"></b></div></div>
+      <div class="info"><svg class="ic"><use href="#i-users"/></svg><div><small>Guests</small><b id="d_guests"></b></div></div>
+      <div class="info"><svg class="ic"><use href="#i-peso"/></svg><div><small>Bill</small><b id="d_bill"></b></div></div>
+
+      <div class="d-actions" id="d_actions"></div>
+      <button type="button" class="btn ghost" id="d_close">Close</button>
+    </div>
+  </div>
+
+  <!-- Modal: payment (receipt) -->
+  <div class="modal" id="rModal">
+    <div class="modal-box">
+      <div class="logo sm"><svg class="ic"><use href="#i-receipt"/></svg></div>
+      <h3>Payment details</h3>
+
+      <div class="info"><svg class="ic"><use href="#i-tag"/></svg><div><small>Reference number</small><b id="r_ref"></b></div></div>
+      <div class="info"><svg class="ic"><use href="#i-peso"/></svg><div><small>Amount</small><b id="r_amount"></b></div></div>
+
+      <div class="qr rc">
+        <small>Receipt (click to open full size)</small>
+        <a id="r_link" target="_blank" rel="noopener"><img id="r_img" alt="Payment receipt"></a>
+      </div>
+
+      <button type="button" class="btn ghost" id="r_close">Close</button>
+    </div>
+  </div>
+
+  <!-- Modal: confirmation -->
+  <div class="modal" id="confirmModal">
+    <div class="modal-box small">
+      <div class="logo sm" id="cmIcon"><svg class="ic"><use href="#i-check"/></svg></div>
+      <h3 id="cmTitle"></h3>
+      <p class="hint" id="cmText"></p>
+      <div class="row">
+        <button type="button" class="btn ghost" id="cmCancel">Cancel</button>
+        <button type="button" class="btn" id="cmOk">Yes</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='partner-bookings.js') }}"></script>
+</body>
+</html>

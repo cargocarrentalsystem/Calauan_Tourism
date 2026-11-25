@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#14532d">
+  <title>My Bookings | Calauan Tourism</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='user-bookings.css') }}">
+</head>
+<body>
+
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- Icons -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-pineapple" viewBox="0 0 24 24"><path d="M12 8.2C11.6 5.6 10 4.2 8 3M12 8.2C12.4 5.6 14 4.2 16 3M12 8.2V2.5"/><ellipse cx="12" cy="15" rx="5.2" ry="6.8"/><path d="m8.4 11.6 7.2 7.2M15.6 11.6l-7.2 7.2"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-peso" viewBox="0 0 24 24"><path d="M7 20V4h6a4 4 0 0 1 0 8H7M5 8h10M5 11h10"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></symbol>
+  </svg>
+
+  <!-- ================= HEADER ================= -->
+  <header class="topbar" id="topbar">
+    <a class="brand" href="{{ url_for('user.home') }}">
+      <span class="logo"><svg class="ic" aria-hidden="true"><use href="#i-pineapple"/></svg></span>
+      <div>
+        <h2>Calauan Tourism</h2>
+        <small>LAGUNA</small>
+      </div>
+    </a>
+
+    <div class="spacer"></div>
+
+    <button type="button" class="icon-btn burger" id="burger" aria-label="Open or close the menu" aria-expanded="false" aria-controls="nav">
+      <svg class="ic" aria-hidden="true"><use href="#i-menu"/></svg>
+    </button>
+
+    <nav class="nav" id="nav" aria-label="Main menu">
+      <a href="{{ url_for('user.home') }}">Home</a>
+      <a href="{{ url_for('user.contact') }}">Contact</a>
+      <a href="{{ url_for('user.destinations') }}">Destinations</a>
+      <a href="{{ url_for('user.establishments') }}">Establishments</a>
+
+      <div class="profile-wrap">
+        <button type="button" class="avatar-btn" id="profileBtn" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
+          <span class="avatar">{% if me_img %}<img src="{{ url_for('static', filename='uploads/' ~ me_img) }}" alt="">{% else %}{{ (session.name or 'U')[:1]|upper }}{% endif %}</span>
+          <span class="pname">{{ session.name }}</span>
+          <svg class="ic chev" aria-hidden="true"><use href="#i-chevron"/></svg>
+        </button>
+
+        <div class="menu" id="profileMenu" role="menu">
+          <div class="menu-head">
+            <span class="avatar">{% if me_img %}<img src="{{ url_for('static', filename='uploads/' ~ me_img) }}" alt="">{% else %}{{ (session.name or 'U')[:1]|upper }}{% endif %}</span>
+            <div>
+              <b>{{ session.name }}</b>
+              <small>Tourist</small>
+            </div>
+          </div>
+          <a href="{{ url_for('user.my_bookings') }}" role="menuitem"><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg>My Bookings</a>
+          <a href="{{ url_for('user.profile') }}" role="menuitem"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg>Profile</a>
+          <a href="{{ url_for('user.logout') }}" role="menuitem" class="danger"><svg class="ic" aria-hidden="true"><use href="#i-logout"/></svg>Logout</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ================= BANNER ================= -->
+  <section class="banner">
+    <div class="scene" aria-hidden="true">
+      <span class="sun"></span>
+      <span class="cloud c1"></span>
+      <span class="cloud c2"></span>
+      <svg class="range m1" viewBox="0 0 1440 320" preserveAspectRatio="none"><path d="M0 210 L150 120 L260 185 L430 55 L610 200 L790 105 L960 210 L1150 90 L1300 180 L1440 130 V320 H0Z"/></svg>
+      <svg class="range m2" viewBox="0 0 1440 320" preserveAspectRatio="none"><path d="M0 250 L200 150 L360 235 L560 120 L760 245 L980 140 L1180 240 L1440 170 V320 H0Z"/></svg>
+      <svg class="range m3" viewBox="0 0 1440 320" preserveAspectRatio="none"><path d="M0 285 C180 235 340 290 560 262 C780 234 960 292 1180 262 C1300 246 1380 258 1440 270 V320 H0Z"/></svg>
+    </div>
+
+    <div class="hero-text">
+      <span class="tag"><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg>MY BOOKINGS</span>
+      <h1>My <em>Bookings</em></h1>
+      <p>Track your bookings, see your bill, and pay once you've arrived.</p>
+    </div>
+  </section>
+
+  <!-- ================= PAGE ================= -->
+  <main id="main">
+    <div id="msg" class="msg" role="alert" hidden></div>
+
+    <div class="section-head">
+      <h2><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg>Your bookings <span class="count">{{ rows|length }}</span></h2>
+    </div>
+
+    <div class="bk-list">
+      {% for r in rows %}
+      <article class="bk-item" data-id="{{ r.id }}" data-code="{{ r.booking_code or ('#' ~ r.id) }}"
+               data-place="{{ r.business_name or 'Establishment' }}" data-dates="{{ r.dates }}"
+               data-time="{{ r.time }}" data-guests="{{ r.guests or 1 }}" data-status="{{ r.status }}"
+               data-amount="{{ r.amount }}" data-pay="{{ 1 if r.payment_status else 0 }}"
+               data-ref="{{ r.payment_ref or '' }}" data-qr="{{ r.gcash_qr or '' }}"
+               data-pay-url="{{ url_for('user.booking_pay', bid=r.id) }}">
+        <div class="bk-main">
+          <span class="bk-code">{{ r.booking_code or ('#' ~ r.id) }}</span>
+          <h3>{{ r.business_name or 'Establishment' }}</h3>
+          <div class="meta"><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg>{{ r.dates }}</div>
+          <div class="meta"><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>{{ r.time }}</div>
+        </div>
+        <div class="bk-side">
+          <span class="badge {{ r.status }}">{{ r.status|capitalize }}</span>
+          {% if r.amount %}<b class="bk-amt">₱{{ "{:,.2f}".format(r.amount) }}</b>{% endif %}
+          <button type="button" class="btn sm btn-view">View details</button>
+        </div>
+      </article>
+      {% else %}
+      <p class="empty-box">You have no bookings yet. <a href="{{ url_for('user.establishments') }}">Browse establishments</a> to book one.</p>
+      {% endfor %}
+    </div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    <svg class="footer-hills" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 80 V50 L160 18 L300 46 L480 6 L660 44 L840 14 L1020 48 L1200 10 L1340 40 L1440 24 V80Z"/>
+    </svg>
+    <div class="footer-copy">&copy; <span id="year"></span> Calauan Tourism, Laguna. All rights reserved.</div>
+  </footer>
+
+  <!-- Modal: booking details -->
+  <div class="modal" id="bdModal" data-uploads="{{ url_for('static', filename='uploads/') }}">
+    <div class="modal-box small" role="dialog" aria-modal="true" aria-labelledby="bd_place">
+      <button type="button" class="modal-x" id="bd_close" aria-label="Close"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
+      <div class="bk-body center">
+        <p class="bk-code" id="bd_code"></p>
+        <h3 id="bd_place"></h3>
+        <div><span class="badge" id="bd_status"></span></div>
+
+        <ol class="steps" id="bd_steps"></ol>
+        <p class="note-box" id="bd_note"></p>
+        <dl class="sum" id="bd_sum"></dl>
+
+        <button type="button" class="btn full" id="bd_pay" hidden><svg class="ic" aria-hidden="true"><use href="#i-peso"/></svg>Pay now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: pay now -->
+  <div class="modal" id="payModal">
+    <div class="modal-box small" role="dialog" aria-modal="true" aria-labelledby="pay_title">
+      <button type="button" class="modal-x" id="pay_close" aria-label="Close"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
+      <div class="bk-body center">
+        <div class="big-icon"><svg class="ic" aria-hidden="true"><use href="#i-peso"/></svg></div>
+        <h3 id="pay_title">Pay now</h3>
+        <p class="hint">Amount due: <b id="pay_amount"></b><br>Scan the QR code to pay, then enter your reference number and upload your receipt.</p>
+
+        <div id="payMsg" class="msg" role="alert" hidden></div>
+
+        <div class="pay-qr" id="pay_qr_wrap" hidden><img id="pay_qr" alt="Payment QR code"></div>
+        <p class="note warn" id="pay_noqr" hidden>This establishment has no QR code on file. Please contact them directly.</p>
+
+        <form id="payForm" class="form" novalidate>
+          <div class="fld">
+            <label for="pay_ref">Reference number</label>
+            <input type="text" name="reference" id="pay_ref" maxlength="40" autocomplete="off" placeholder="e.g. 1234567890123">
+          </div>
+          <div class="fld">
+            <label for="pay_file">Receipt image</label>
+            <div class="upload-box">
+              <img id="pay_prev" alt="Receipt preview" hidden>
+              <small id="pay_fname"></small>
+              <input type="file" name="receipt" id="pay_file" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp">
+              <label for="pay_file" class="btn sm ghost"><svg class="ic" aria-hidden="true"><use href="#i-upload"/></svg>Choose image</label>
+            </div>
+          </div>
+          <button type="submit" class="btn full" id="payOk">Submit payment</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='user-bookings.js') }}"></script>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>

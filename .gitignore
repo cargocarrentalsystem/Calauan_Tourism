@@ -1,0 +1,24 @@
+@"
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Flask / local data
+instance/
+*.sqlite3
+*.db
+
+# Environment variables
+.env
+
+# OS files
+Thumbs.db
+desktop.ini
+.DS_Store
+"@ | Out-File -Encoding utf8 .gitignore

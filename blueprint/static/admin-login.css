@@ -1,0 +1,163 @@
+:root{
+  --p:#7c3aed;      /* purple */
+  --pm:#6d28d9;
+  --pd:#4c1d95;
+  --pl:#f5f3ff;     /* light purple */
+  --bd:#ddd6fe;     /* border */
+  --t:#2e1065;      /* text */
+  --mut:#6b6290;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;padding:20px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Segoe UI",system-ui,sans-serif;color:var(--t);background:var(--pd);
+}
+
+/* ---------- Background (calauan_tour.jpg + purple overlay) ---------- */
+.bg{
+  position:fixed;inset:0;z-index:-1;
+  background:
+    linear-gradient(135deg,rgba(46,16,101,.88),rgba(124,58,237,.6)),
+    url('calauan_tour.jpg') center/cover no-repeat;
+  animation:pan 30s ease-in-out infinite alternate;
+}
+@keyframes pan{from{transform:scale(1)}to{transform:scale(1.1)}}
+
+/* ---------- Layout ---------- */
+.wrap{
+  width:100%;max-width:960px;
+  display:grid;grid-template-columns:1fr 400px;gap:60px;align-items:center;
+}
+.hero{color:#fff;animation:fadeLeft .8s cubic-bezier(.2,.8,.2,1) both}
+.tag{
+  display:inline-block;padding:6px 14px;border-radius:30px;
+  background:rgba(255,255,255,.18);backdrop-filter:blur(4px);
+  font-size:.75rem;font-weight:600;letter-spacing:.15em;
+}
+.hero h1{font-size:clamp(2.2rem,4.5vw,3.3rem);line-height:1.1;margin:.4em 0}
+.lead{max-width:420px;line-height:1.6;opacity:.9}
+
+/* ---------- Card at modal ---------- */
+.card,.modal-box{
+  background:#fff;border-radius:20px;padding:32px 28px;
+  display:grid;gap:14px;position:relative;overflow:hidden;
+  box-shadow:0 25px 60px rgba(46,16,101,.45);
+}
+.card{animation:rise .7s cubic-bezier(.2,.8,.2,1) both}
+.card::before,.modal-box::before{
+  content:"";position:absolute;inset:0 0 auto 0;height:5px;
+  background:linear-gradient(90deg,#a78bfa,var(--p),var(--pd));
+}
+.card h2,.modal-box h3{margin:0;text-align:center;font-size:1.4rem}
+.sub,.hint{margin:0;text-align:center;font-size:.9rem;color:var(--mut)}
+
+.logo{
+  width:60px;height:60px;margin:0 auto;border-radius:18px;
+  display:grid;place-items:center;color:#fff;
+  background:linear-gradient(135deg,#a78bfa,var(--pm));
+  box-shadow:0 10px 24px rgba(124,58,237,.4);
+  animation:pulse 2.8s ease-in-out infinite;
+}
+.logo.sm{width:48px;height:48px;border-radius:14px}
+.logo .ic{width:28px;height:28px}
+
+/* Pag-load: isa-isang lumalabas ang laman ng login card */
+.stagger>*:not(.msg){opacity:0;animation:fadeUp .55s ease forwards}
+.stagger>*:nth-child(1){animation-delay:.15s}
+.stagger>*:nth-child(2){animation-delay:.22s}
+.stagger>*:nth-child(3){animation-delay:.29s}
+.stagger>*:nth-child(5){animation-delay:.36s}
+.stagger>*:nth-child(6){animation-delay:.43s}
+.stagger>*:nth-child(7){animation-delay:.5s}
+.stagger>*:nth-child(8){animation-delay:.57s}
+
+/* ---------- Mga field ---------- */
+.ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.field{position:relative}
+.field>.ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#a78bfa;transition:color .2s;pointer-events:none}
+.field input{
+  width:100%;padding:13px 44px;border:1.5px solid var(--bd);border-radius:12px;
+  background:var(--pl);color:var(--t);font:inherit;transition:border-color .2s,box-shadow .2s,background .2s;
+}
+.field input::placeholder{color:#a79fc9}
+.field input:focus{outline:0;border-color:var(--p);background:#fff;box-shadow:0 0 0 4px rgba(124,58,237,.15)}
+.field:focus-within>.ic{color:var(--p)}
+.field input.code{text-align:center;letter-spacing:.45em;font-size:1.15rem;font-weight:600;padding-left:44px}
+
+.eye{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  background:none;border:0;padding:7px;display:flex;cursor:pointer;color:#a78bfa;border-radius:8px;transition:color .2s,background .2s;
+}
+.eye:hover{color:var(--p);background:rgba(124,58,237,.1)}
+
+/* ---------- Mga button ---------- */
+.btn{
+  width:100%;padding:13px;border:0;border-radius:12px;position:relative;
+  font:inherit;font-weight:600;color:#fff;cursor:pointer;
+  background:linear-gradient(135deg,var(--p),var(--pm) 55%,#5b21b6);background-size:200% 100%;
+  box-shadow:0 8px 20px rgba(124,58,237,.35);
+  transition:transform .2s,box-shadow .2s,background-position .4s,opacity .2s;
+}
+.btn:hover:not(:disabled){transform:translateY(-2px);background-position:100% 0;box-shadow:0 12px 26px rgba(124,58,237,.45)}
+.btn:active:not(:disabled){transform:translateY(0)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn.ghost{background:var(--pl);color:var(--pm);border:1.5px solid var(--bd);box-shadow:none}
+.btn.ghost:hover:not(:disabled){background:#ede9fe;box-shadow:none}
+
+/* Loading spinner sa loob ng button */
+.btn.loading{color:transparent;pointer-events:none}
+.btn.loading::after{
+  content:"";position:absolute;inset:0;margin:auto;width:20px;height:20px;
+  border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+
+.row{display:flex;gap:10px}
+.row .btn{flex:1}
+.forgot,.link{
+  background:none;border:0;padding:0;font:inherit;font-size:.88rem;
+  color:var(--pm);text-align:center;text-decoration:none;cursor:pointer;
+}
+.forgot:hover,.link:hover:not(:disabled){text-decoration:underline}
+.link:disabled{color:#a79fc9;cursor:not-allowed}
+
+/* ---------- Mga mensahe ---------- */
+.msg{padding:11px 14px;border-radius:10px;font-size:.88rem;border-left:4px solid}
+.msg[hidden]{display:none}
+.msg.error{background:#fef2f2;color:#991b1b;border-color:#ef4444;animation:shake .4s}
+.msg.ok{background:#f0fdf4;color:#166534;border-color:#22c55e;animation:fadeUp .3s}
+
+/* ---------- Countdown ---------- */
+.timer{display:grid;gap:7px}
+.timer-top{display:flex;justify-content:space-between;font-size:.85rem;color:var(--mut)}
+#countdown{color:var(--pm);font-variant-numeric:tabular-nums;font-size:1rem}
+.bar{height:6px;background:var(--bd);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#a78bfa,var(--p));transition:width 1s linear,background .3s}
+.timer.low #countdown{color:#dc2626}
+.timer.low .bar i{background:#ef4444}
+
+/* ---------- Modal ---------- */
+.modal{
+  position:fixed;inset:0;z-index:10;padding:16px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(46,16,101,.55);backdrop-filter:blur(6px);
+  opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;
+}
+.modal.show{opacity:1;visibility:visible}
+.modal-box{
+  width:100%;max-width:400px;max-height:94vh;overflow:auto;padding:30px 26px 24px;
+  transform:translateY(24px) scale(.95);transition:transform .35s cubic-bezier(.2,.8,.2,1);
+}
+.modal.show .modal-box{transform:none}
+
+/* ---------- Animations ---------- */
+@keyframes rise{from{opacity:0;transform:translateY(40px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes fadeLeft{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:0 10px 24px rgba(124,58,237,.4)}50%{box-shadow:0 10px 34px rgba(124,58,237,.7)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media (max-width:860px){.wrap{grid-template-columns:1fr;max-width:400px}.hero{display:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.stagger>*{opacity:1!important}}
