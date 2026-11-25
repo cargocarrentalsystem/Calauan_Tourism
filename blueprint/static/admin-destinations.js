@@ -390,7 +390,7 @@ function initMap() {
     // Padilimin ang labas ng Calauan (ang loob ay "butas")
     const holes = polys.map(p => p[0].map(([x, y]) => [y, x]));
     L.polygon([[[-85, -180], [-85, 180], [85, 180], [85, -180]], ...holes],
-      { stroke: false, fillColor: "#2e1065", fillOpacity: 0.5, interactive: false }).addTo(map);
+      { stroke: false, fillColor: "#0b2e17", fillOpacity: 0.5, interactive: false }).addTo(map);
 
     // Guhit ng boundary
     const line = L.geoJSON(geo, { style: { color: "#fbbf24", weight: 3, fill: false }, interactive: false }).addTo(map);
