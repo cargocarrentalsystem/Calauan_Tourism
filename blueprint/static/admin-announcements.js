@@ -122,7 +122,7 @@ $("btnAdd").addEventListener("click", () => {
   form.reset();
   $("f_id").value = "";
   showPreview("");
-  openModal("Bagong Announcement");
+  openModal("New Announcement");
 });
 
 document.querySelectorAll(".btn-edit").forEach(btn => {
@@ -134,7 +134,7 @@ document.querySelectorAll(".btn-edit").forEach(btn => {
     $("f_body").value = d.body;
     $("f_status").value = d.status;
     showPreview(d.image);
-    openModal("I-edit ang Announcement");
+    openModal("Edit Announcement");
   });
 });
 
