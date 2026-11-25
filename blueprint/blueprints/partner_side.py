@@ -72,6 +72,18 @@ def save_image(file):
 
 MAX_IMAGES = 10
 
+MAX_PROFILE_MB = 5
+
+
+@partner.context_processor
+def inject_me_img():
+    """Profile image ng naka-login na partner (para sa avatar sa header)."""
+    if session.get("role") == "partner":
+        row = query("SELECT profile_image FROM partners WHERE id=%s",
+                    (session["user_id"],), one=True)
+        return {"me_img": row["profile_image"] if row else None}
+    return {"me_img": None}
+
 
 def valid_image(file):
     """True kung may file at tama ang uri (png, jpg, jpeg, webp)."""
@@ -505,4 +517,61 @@ def establishment_delete(bid):
 @partner.route("/profile")
 @partner_required
 def profile():
-    return "Profile page - susunod nating gagawin."
+    pid = session["user_id"]
+    me = query("SELECT id, partner_code, full_name, email, business_name, category, "
+               "address, contact, status, profile_image, created_at "
+               "FROM partners WHERE id=%s", (pid,), one=True)
+    if not me:
+        session.clear()
+        return redirect(url_for("partner.login"))
+
+    ests = query("SELECT business_id, business_name, category, barangay, status "
+                 "FROM establishments WHERE owner_id=%s ORDER BY created_at DESC", (pid,))
+    return render_template("partner-profile.html", me=me, ests=ests)
+
+
+@partner.route("/profile/save", methods=["POST"])
+@partner_required
+def profile_save():
+    pid = session["user_id"]
+    f = request.form
+    full_name = f.get("full_name", "").strip()
+    contact = f.get("contact", "").strip()
+
+    if not full_name or not contact:
+        return err("missing_fields")
+    if len(full_name) > 100 or len(contact) > 50:
+        return err("too_long")
+
+    me = query("SELECT profile_image FROM partners WHERE id=%s", (pid,), one=True)
+    if not me:
+        return err("not_found", 404)
+    old_img = me["profile_image"]
+    new_img = old_img
+
+    # Suriin muna ang larawan bago mag-save ng kahit ano
+    photo = request.files.get("image")
+    has_photo = bool(photo and photo.filename)
+    if has_photo:
+        if not valid_image(photo):
+            return err("invalid_image")
+        photo.seek(0, os.SEEK_END)
+        too_big = photo.tell() > MAX_PROFILE_MB * 1024 * 1024
+        photo.seek(0)
+        if too_big:
+            return err("image_big")
+
+    if has_photo:
+        new_img = save_gallery_image(photo)
+    elif f.get("remove_image") == "1":
+        new_img = None
+
+    query("UPDATE partners SET full_name=%s, contact=%s, profile_image=%s WHERE id=%s",
+          (full_name, contact, new_img, pid), commit=True)
+
+    # Burahin ang lumang larawan kung napalitan o inalis
+    if old_img and old_img != new_img:
+        delete_upload(old_img)
+
+    session["name"] = full_name
+    return ok(name=full_name)

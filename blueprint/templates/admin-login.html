@@ -3,7 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14532d">
   <title>Admin Login | Calauan Tourism</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="{{ url_for('static', filename='admin-login.css') }}">
 </head>
 <body>
@@ -15,6 +19,7 @@
     <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
     <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
     <symbol id="i-eyeoff" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M3 3l18 18"/></symbol>
+    <symbol id="i-pineapple" viewBox="0 0 24 24"><path d="M12 8.2C11.6 5.6 10 4.2 8 3M12 8.2C12.4 5.6 14 4.2 16 3M12 8.2V2.5"/><ellipse cx="12" cy="15" rx="5.2" ry="6.8"/><path d="m8.4 11.6 7.2 7.2M15.6 11.6l-7.2 7.2"/></symbol>
   </svg>
 
   <div class="bg"></div>
@@ -22,13 +27,13 @@
   <div class="wrap">
     <section class="hero">
       <span class="tag">ADMIN PORTAL</span>
-      <h1>Calauan Tourism</h1>
+      <h1>Calauan <em>Tourism</em></h1>
       <p class="lead">Manage destinations, partners, and bookings in Calauan, Laguna.</p>
     </section>
 
     <!-- Login form -->
     <form class="card stagger" id="loginForm" novalidate>
-      <div class="logo"><svg class="ic"><use href="#i-shield"/></svg></div>
+      <div class="logo"><svg class="ic" aria-hidden="true"><use href="#i-pineapple"/></svg></div>
       <h2>Welcome Back</h2>
       <p class="sub">Log in to access the admin dashboard.</p>
       <div id="msg" class="msg" hidden></div>

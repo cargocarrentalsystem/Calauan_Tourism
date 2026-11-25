@@ -295,3 +295,8 @@ main{padding:24px clamp(14px,2.4vw,28px) 40px;max-width:1200px;margin:0 auto}
 .badge.approved{background:#dbeafe;color:#1d4ed8}
 .badge.arrived{background:var(--sun-100);color:var(--sun-700)}
 .badge.completed{background:#dcfce7;color:#166534}
+
+
+/* ================= PROFILE IMAGE SA AVATAR ================= */
+.avatar{overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}

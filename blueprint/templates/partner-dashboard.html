@@ -69,13 +69,13 @@
 
       <div class="profile-wrap">
         <button type="button" class="avatar-btn" id="profileBtn" aria-haspopup="true" aria-expanded="false" aria-label="Profile menu">
-          <span class="avatar">{{ (session.name or 'P')[:1]|upper }}</span>
+          <span class="avatar">{% if me_img %}<img src="{{ url_for('static', filename='uploads/' ~ me_img) }}" alt="">{% else %}{{ (session.name or 'P')[:1]|upper }}{% endif %}</span>
           <svg class="ic chev"><use href="#i-chevron"/></svg>
         </button>
 
         <div class="menu" id="profileMenu" role="menu">
           <div class="menu-head">
-            <span class="avatar lg">{{ (session.name or 'P')[:1]|upper }}</span>
+            <span class="avatar lg">{% if me_img %}<img src="{{ url_for('static', filename='uploads/' ~ me_img) }}" alt="">{% else %}{{ (session.name or 'P')[:1]|upper }}{% endif %}</span>
             <div>
               <b>{{ session.name }}</b>
               <small>Partner</small>

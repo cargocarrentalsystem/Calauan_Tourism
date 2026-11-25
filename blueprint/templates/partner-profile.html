@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14532d">
+  <title>Profile | Calauan Tourism Partner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='partner-profile.css') }}">
+</head>
+<body>
+
+  <!-- Icons -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-pineapple" viewBox="0 0 24 24"><path d="M12 8.2C11.6 5.6 10 4.2 8 3M12 8.2C12.4 5.6 14 4.2 16 3M12 8.2V2.5"/><ellipse cx="12" cy="15" rx="5.2" ry="6.8"/><path d="m8.4 11.6 7.2 7.2M15.6 11.6l-7.2 7.2"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24"><path d="M3 9 5 4h14l2 5"/><path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M5 12v8h14v-8M10 20v-5h4v5"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.2"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  </svg>
+
+  <div class="overlay" id="overlay"></div>
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar" id="sidebar" aria-label="Main menu">
+    <div class="brand">
+      <div class="logo"><svg class="ic" aria-hidden="true"><use href="#i-pineapple"/></svg></div>
+      <div>
+        <h2>Calauan Tourism</h2>
+        <small>PARTNER PORTAL</small>
+      </div>
+    </div>
+
+    <nav>
+      <a href="{{ url_for('partner.dashboard') }}"><svg class="ic"><use href="#i-grid"/></svg>Dashboard</a>
+      <a href="{{ url_for('partner.bookings') }}"><svg class="ic"><use href="#i-calendar"/></svg>Bookings</a>
+      <a href="{{ url_for('partner.establishments') }}"><svg class="ic"><use href="#i-store"/></svg>Manage Establishments</a>
+    </nav>
+  </aside>
+
+  <!-- ================= PAGE ================= -->
+  <div class="shell" id="shell">
+
+    <header class="topbar">
+      <button type="button" class="icon-btn" id="burger" aria-label="Open or close menu" aria-expanded="false">
+        <svg class="ic"><use href="#i-menu"/></svg>
+      </button>
+
+      <div class="spacer"></div>
+
+      <div class="clock" aria-live="off">
+        <svg class="ic"><use href="#i-clock"/></svg>
+        <div>
+          <small id="clockDate">--</small>
+          <b id="clockTime">--:--:--</b>
+        </div>
+      </div>
+
+      <div class="profile-wrap">
+        <button type="button" class="avatar-btn" id="profileBtn" aria-haspopup="true" aria-expanded="false" aria-label="Profile menu">
+          <span class="avatar">{% if me_img %}<img src="{{ url_for('static', filename='uploads/' ~ me_img) }}" alt="">{% else %}{{ (session.name or 'P')[:1]|upper }}{% endif %}</span>
+          <svg class="ic chev"><use href="#i-chevron"/></svg>
+        </button>
+
+        <div class="menu" id="profileMenu" role="menu">
+          <div class="menu-head">
+            <span class="avatar lg">{% if me_img %}<img src="{{ url_for('static', filename='uploads/' ~ me_img) }}" alt="">{% else %}{{ (session.name or 'P')[:1]|upper }}{% endif %}</span>
+            <div>
+              <b>{{ session.name }}</b>
+              <small>Partner</small>
+            </div>
+          </div>
+          <a href="{{ url_for('partner.profile') }}" role="menuitem"><svg class="ic"><use href="#i-user"/></svg>Profile</a>
+          <a href="{{ url_for('partner.logout') }}" role="menuitem" class="danger"><svg class="ic"><use href="#i-logout"/></svg>Logout</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="banner">
+        <span class="tag">PARTNER PORTAL</span>
+        <h1>My Profile</h1>
+        <p>View your account details and update your personal information.</p>
+      </section>
+
+      <div id="msg" class="msg" hidden></div>
+
+      <form id="profileForm" novalidate data-url="{{ url_for('partner.profile_save') }}">
+        <input type="hidden" name="remove_image" value="0">
+
+        <div class="profile-grid">
+
+          <!-- LEFT: photo and identity -->
+          <section class="card id-card">
+            <div class="pf-avatar">
+              <img id="pfImg" alt="Profile photo"{% if me.profile_image %} src="{{ url_for('static', filename='uploads/' ~ me.profile_image) }}"{% else %} hidden{% endif %}>
+              <span id="pfInitial"{% if me.profile_image %} hidden{% endif %}>{{ (me.full_name or 'P')[:1]|upper }}</span>
+            </div>
+
+            <h2 class="pf-name">{{ me.full_name }}</h2>
+            <span class="badge {{ me.status }}">{{ me.status|capitalize }}</span>
+
+            <div class="pf-photo-actions">
+              <input type="file" name="image" id="pfFile" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp">
+              <label for="pfFile" class="btn sm ghost"><svg class="ic"><use href="#i-upload"/></svg>Change photo</label>
+              <button type="button" class="btn sm ghost" id="pfRemove"{% if not me.profile_image %} hidden{% endif %}><svg class="ic"><use href="#i-trash"/></svg>Remove</button>
+            </div>
+            <small class="g-hint">PNG, JPG, JPEG, or WEBP. Max 5MB. Click Save changes to apply.</small>
+
+            <div class="pf-meta">
+              <div class="info"><svg class="ic"><use href="#i-tag"/></svg><div><small>Partner code</small><b>{{ me.partner_code or '—' }}</b></div></div>
+              <div class="info"><svg class="ic"><use href="#i-mail"/></svg><div><small>Email</small><b>{{ me.email }}</b></div></div>
+              <div class="info"><svg class="ic"><use href="#i-calendar"/></svg><div><small>Member since</small><b>{{ me.created_at.strftime('%B %d, %Y') }}</b></div></div>
+            </div>
+          </section>
+
+          <!-- RIGHT: editable personal details -->
+          <section class="card panel">
+            <h3><svg class="ic"><use href="#i-user"/></svg>Personal Details</h3>
+
+            <div class="form">
+              <div class="fld">
+                <label for="full_name">Full Name</label>
+                <input type="text" id="full_name" name="full_name" value="{{ me.full_name }}" maxlength="100" autocomplete="name">
+              </div>
+
+              <div class="fld-row">
+                <div class="fld">
+                  <label for="contact">Contact Number</label>
+                  <input type="text" id="contact" name="contact" value="{{ me.contact or '' }}" maxlength="50" autocomplete="tel">
+                </div>
+                <div class="fld">
+                  <label for="email">Email</label>
+                  <input type="text" id="email" value="{{ me.email }}" readonly tabindex="-1">
+                </div>
+              </div>
+
+              <p class="pf-note">Your email is used to log in, so it can't be changed here.</p>
+
+              <div class="row">
+                <button type="submit" class="btn" id="pfSave">Save changes</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </form>
+
+      <!-- Business details (display only) -->
+      <section class="card panel block">
+        <h3><svg class="ic"><use href="#i-store"/></svg>Business Details</h3>
+        <div class="info-grid">
+          <div class="info"><svg class="ic"><use href="#i-store"/></svg><div><small>Business name</small><b>{{ me.business_name }}</b></div></div>
+          <div class="info"><svg class="ic"><use href="#i-tag"/></svg><div><small>Category</small><b>{{ me.category or '—' }}</b></div></div>
+          <div class="info"><svg class="ic"><use href="#i-pin"/></svg><div><small>Address</small><b>{{ me.address or '—' }}</b></div></div>
+        </div>
+        <p class="pf-note">These were set when you registered. Contact the admin if they need to change.</p>
+      </section>
+
+      <!-- Establishments (display only) -->
+      <section class="card panel block">
+        <h3><svg class="ic"><use href="#i-store"/></svg>My Establishments <span class="count">{{ ests|length }}</span></h3>
+
+        {% for e in ests %}
+        <a class="est-item" href="{{ url_for('partner.establishments', q=e.business_name) }}">
+          <span class="ico-sm"><svg class="ic"><use href="#i-store"/></svg></span>
+          <div>
+            <b>{{ e.business_name }}</b>
+            <small>{{ e.category or '—' }}{% if e.barangay %} · Brgy. {{ e.barangay }}{% endif %}</small>
+          </div>
+          <span class="badge {{ e.status }}">{{ 'Visible' if e.status == 'active' else 'Hidden' }}</span>
+        </a>
+        {% else %}
+        <p class="empty-box">You haven't added any establishments yet.</p>
+        {% endfor %}
+
+        <a href="{{ url_for('partner.establishments') }}" class="btn-link">Manage establishments <svg class="ic"><use href="#i-arrow"/></svg></a>
+      </section>
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='partner-profile.js') }}"></script>
+</body>
+</html>
